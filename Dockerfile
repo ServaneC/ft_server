@@ -1,5 +1,4 @@
 FROM debian:buster
-RUN apt-get update
-RUN apt-get install -y nginx
-#ENTRYPOINT [“/usr/sbin/nginx”,”-g”,”daemon off;”]
-EXPOSE 80
+RUN apt-get update && apt-get upgrade \
+&& apt-get -y wget nginx php7.3-fmp php7.3-mysql mariadb-server mariadb-client \
+&& rm /etc/nginx/sites-available/default
