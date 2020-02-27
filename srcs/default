@@ -6,7 +6,7 @@
 #    By: schene <schene@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/27 12:27:38 by schene            #+#    #+#              #
-#    Updated: 2020/02/27 13:20:22 by schene           ###   ########.fr        #
+#    Updated: 2020/02/27 15:59:41 by schene           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,6 +49,10 @@ server {
         index index.php index.html index.htm index.nginx-debian.html;
 
         server_name _;
+
+		ssl on;
+		ssl_certificate     ./certificate.pem;
+    	ssl_certificate_key ./private_key.pem;
 
         location / {
 			autoindex on;
