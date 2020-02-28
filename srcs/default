@@ -6,7 +6,7 @@
 #    By: schene <schene@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/27 12:27:38 by schene            #+#    #+#              #
-#    Updated: 2020/02/27 15:59:41 by schene           ###   ########.fr        #
+#    Updated: 2020/02/28 14:44:08 by schene           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,15 @@ server {
 
         root /var/www/html;
 
+        ssl off;
+        
         index index.php index.html index.htm index.nginx-debian.html;
-
+        
         server_name _;
 
         location / {
-            autoindex on;
             try_files $uri $uri/ =404;
+            autoindex on;
         }
 
         location ~ \.php$ {
@@ -51,8 +53,8 @@ server {
         server_name _;
 
 		ssl on;
-		ssl_certificate     ./certificate.pem;
-    	ssl_certificate_key ./private_key.pem;
+		ssl_certificate    /etc/ssl/localhost/certificate.pem;
+    	ssl_certificate_key /etc/ssl/localhost/private_key.pem;
 
         location / {
 			autoindex on;
