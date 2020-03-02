@@ -5,70 +5,60 @@
 #                                                     +:+ +:+         +:+      #
 #    By: schene <schene@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/02/27 12:27:38 by schene            #+#    #+#              #
-#    Updated: 2020/02/28 14:44:08 by schene           ###   ########.fr        #
+#    Created: 2020/03/02 09:05:29 by schene            #+#    #+#              #
+#    Updated: 2020/03/02 10:01:01 by schene           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
-        root /var/www/html;
+    root /var/www/html;
+    index index.php index.html index.htm index.nginx-debian.html;
 
         ssl off;
-        
-        index index.php index.html index.htm index.nginx-debian.html;
-        
         server_name _;
 
-        location / {
-            try_files $uri $uri/ =404;
-            autoindex on;
-        }
+    location / {
+	autoindex on;
+        try_files $uri $uri/ =404;
+    }
 
-        location ~ \.php$ {
-               include snippets/fastcgi-php.conf;        
-               fastcgi_pass unix:/run/php/php7.3-fpm.sock;
-        }
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+    }
 
-        location /phpmyadmin {
-			autoindex off;
-		}
-
-        location ~ /\.ht {
-               deny all;
-        }
+    location ~ /\.ht {
+		deny all;
+    }
 }
 
 server {
 
-         listen 443 ssl default_server;
-         listen [::]:443 ssl default_server;
+        listen 443 ssl default_server;
+        listen [::]:443 ssl default_server;
 
-        root /var/www/html;
+        ssl on;
+	ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+	ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
 
+	root /var/www/html;
+	
         index index.php index.html index.htm index.nginx-debian.html;
 
         server_name _;
 
-		ssl on;
-		ssl_certificate    /etc/ssl/localhost/certificate.pem;
-    	ssl_certificate_key /etc/ssl/localhost/private_key.pem;
-
         location / {
-			autoindex on;
-			try_files $uri $uri/ =404;
-        }
-        
-        location ~ \.php$ {
-			include snippets/fastcgi-php.conf;
-			fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+                autoindex on;
+                try_files $uri $uri/ =404;
         }
 
-        location /phpmyadmin {
-			autoindex off;
-		}
+        location ~ \.php$ {
+               include snippets/fastcgi-php.conf;
+              fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+        }
 
         location ~ /\.ht {
                deny all;
