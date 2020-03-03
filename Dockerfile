@@ -1,15 +1,17 @@
 FROM debian:buster
 
-RUN apt-get update && apt-get upgrade && apt-get install wget nginx openssl php7.3-fpm -y && rm -f /etc/nginx/sites-available/default
+RUN apt-get update && apt-get upgrade && apt-get install wget nginx openssl php7.3-fpm php7.3-mysql mariadb-server -y \
+&& rm -f /etc/nginx/sites-available/default
 
-COPY srcs/default /etc/nginx/sites-available/
+#copy of the sources
+COPY srcs/default /etc/nginx/sites-available
+COPY srcs/phpMyAdmin /var/www/html/
+COPY srcs/wordpress /var/www/html/
+COPY srcs/start.sh /home/
 
-#generate key and ssl ccertificate
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -subj /C=FR/ST=IDF/L=Paris/O=42/CN=schene/ \
-    -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
+#giving the right to execute
+RUN chmod u+x /home/start.sh
 
-RUN service nginx start
+CMD sh /home/start.sh && bash
 
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080 80 3306
