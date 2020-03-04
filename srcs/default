@@ -6,65 +6,33 @@
 #    By: schene <schene@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/02 09:05:29 by schene            #+#    #+#              #
-#    Updated: 2020/03/03 12:28:49 by schene           ###   ########.fr        #
+#    Updated: 2020/03/04 12:48:26 by schene           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    root /var/www/html;
-    index index.php index.html index.htm index.nginx-debian.html;
+    listen 80;
+    listen [::]:80 default;
 
 	listen 443 ssl;
     ssl on;
 	ssl_certificate /etc/ssl/certs/localhost.crt;
 	ssl_certificate_key /etc/ssl/private/localhost.key;
     
+ 	root /var/www/html;
+    index index.php index.html index.htm;
+
 	server_name localhost;
 
     location / {
                 autoindex on;
                 try_files $uri $uri/ =404;
         }
-
-        location ~ \.php$ {
-               include snippets/fastcgi-php.conf;
-              fastcgi_pass unix:/run/php/php7.3-fpm.sock;
-        }
 		
-	location /wordpress {
-         root /var/www/html/;
-           index index.php index.html index.htm;
-          location ~ ^/wordpress/(.+\.php)$ {
-                   try_files $uri =404;
-                   root /var/www/html;
-                   fastcgi_pass unix:/run/php/php7.3-fpm.sock;
-                   fastcgi_index index.php;
-                   fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                   include /etc/nginx/fastcgi_params;
-           }
-           location ~* ^/wordpress/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
-                   root /var/www/html;
-		   }
-    	}
-	
-		location /phpmyadmin { 
-      		root /var/www/html/;
-        	index index.php index.html index.htm;
-          	location ~ ^/phpmyadmin/(.+\.php)$ {
-                   try_files $uri =404;
-                   root /var/www/html/;
-                   fastcgi_pass unix:/run/php/php7.3-fpm.sock;
-                   fastcgi_index index.php;
-                   fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                  include /etc/nginx/fastcgi_params;
-		}
-           location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
-               root /var/www/html;
-           }
-    	}
+        location ~ \.php$ {
+            	include snippets/fastcgi-php.conf;
+            	fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+        }
 
         location ~ /\.ht {
                deny all;
